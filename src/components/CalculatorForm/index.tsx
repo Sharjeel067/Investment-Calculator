@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 const defaultForm = {
-  currency: 'PKR - Pakistani Rupee',
-  monthlyIncome: 100000,
+  currency: 'USD - US Dollar',
+  monthlyIncome: 1000,
   investmentPercent: 5,
   incomeGrowth: 20,
   stockReturn: 15,
