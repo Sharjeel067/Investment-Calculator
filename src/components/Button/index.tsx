@@ -1,5 +1,5 @@
 import React from 'react';
-import colors from '../config/colors';
+import colors from '../../config/colors';
 
 interface ButtonProps {
   children: React.ReactNode;
