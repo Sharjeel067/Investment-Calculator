@@ -2,20 +2,28 @@ import React, { useState } from 'react';
 
 const defaultForm = {
   currency: 'USD - US Dollar',
-  monthlyIncome: 1000,
-  investmentPercent: 5,
-  incomeGrowth: 20,
-  stockReturn: 15,
-  period: 15,
+  monthlyIncome: '',
+  investmentPercent: '',
+  incomeGrowth: '',
+  stockReturn: '',
+  period: '',
 };
 
 const CalculatorForm = ({ onCalculate }: { onCalculate: (form: typeof defaultForm) => void }) => {
   const [form, setForm] = useState(defaultForm);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: name === 'currency' ? value : Number(value) }));
+    const { name, value, type } = e.target;
+    if (type === 'number') {
+      // Allow empty string, otherwise enforce 10 digit max
+      if (value === '' || /^\d{0,10}$/.test(value)) {
+        setForm((prev) => ({ ...prev, [name]: value === '' ? '' : value.replace(/^0+(?!$)/, '') }));
+      }
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,6 +58,7 @@ const CalculatorForm = ({ onCalculate }: { onCalculate: (form: typeof defaultFor
             name="monthlyIncome"
             value={form.monthlyIncome}
             onChange={handleChange}
+            maxLength={10}
             className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg sm:rounded-xl shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-200 text-slate-900 dark:text-slate-100"
             placeholder="Enter amount"
           />
@@ -64,6 +73,7 @@ const CalculatorForm = ({ onCalculate }: { onCalculate: (form: typeof defaultFor
             name="investmentPercent"
             value={form.investmentPercent}
             onChange={handleChange}
+            maxLength={10}
             className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg sm:rounded-xl shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-200 text-slate-900 dark:text-slate-100"
             placeholder="Enter percentage"
           />
@@ -78,6 +88,7 @@ const CalculatorForm = ({ onCalculate }: { onCalculate: (form: typeof defaultFor
             name="incomeGrowth"
             value={form.incomeGrowth}
             onChange={handleChange}
+            maxLength={10}
             className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg sm:rounded-xl shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-200 text-slate-900 dark:text-slate-100"
             placeholder="Enter growth rate"
           />
@@ -92,6 +103,7 @@ const CalculatorForm = ({ onCalculate }: { onCalculate: (form: typeof defaultFor
             name="stockReturn"
             value={form.stockReturn}
             onChange={handleChange}
+            maxLength={10}
             className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg sm:rounded-xl shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-200 text-slate-900 dark:text-slate-100"
             placeholder="Enter return rate"
           />
@@ -106,6 +118,7 @@ const CalculatorForm = ({ onCalculate }: { onCalculate: (form: typeof defaultFor
             name="period"
             value={form.period}
             onChange={handleChange}
+            maxLength={10}
             className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg sm:rounded-xl shadow-sm focus:border-emerald-500 dark:focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 dark:focus:ring-emerald-400/20 transition-all duration-200 text-slate-900 dark:text-slate-100"
             placeholder="Enter years"
           />

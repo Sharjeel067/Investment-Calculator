@@ -7,22 +7,47 @@ import InvestmentAllocationChart from '../InvestmentAllocationChart';
 import SalaryGrowthChart from '../SalaryGrowthChart';
 import { calculateInvestment } from '../../utils/calculateInvestment';
 
-const defaultForm = {
+type FormType = {
+  currency: string;
+  monthlyIncome: string;
+  investmentPercent: string;
+  incomeGrowth: string;
+  stockReturn: string;
+  period: string;
+};
+
+const defaultForm: FormType = {
   currency: 'PKR - Pakistani Rupee',
-  monthlyIncome: 100000,
-  investmentPercent: 5,
-  incomeGrowth: 20,
-  stockReturn: 15,
-  period: 15,
+  monthlyIncome: '',
+  investmentPercent: '',
+  incomeGrowth: '',
+  stockReturn: '',
+  period: '',
 };
 
 const InvestmentCalculator = () => {
-  const [form, setForm] = useState(defaultForm);
-  const [result, setResult] = useState(calculateInvestment(defaultForm));
+  const [form, setForm] = useState<FormType>(defaultForm);
+  const [result, setResult] = useState(calculateInvestment({
+    ...defaultForm,
+    monthlyIncome: 100000,
+    investmentPercent: 5,
+    incomeGrowth: 20,
+    stockReturn: 15,
+    period: 15,
+  }));
 
-  const handleCalculate = (newForm: typeof defaultForm) => {
+  const handleCalculate = (newForm: FormType) => {
     setForm(newForm);
-    setResult(calculateInvestment(newForm));
+    // Convert all string values to numbers, fallback to 0 if empty
+    const parsedForm = {
+      ...newForm,
+      monthlyIncome: Number(newForm.monthlyIncome) || 0,
+      investmentPercent: Number(newForm.investmentPercent) || 0,
+      incomeGrowth: Number(newForm.incomeGrowth) || 0,
+      stockReturn: Number(newForm.stockReturn) || 0,
+      period: Number(newForm.period) || 0,
+    };
+    setResult(calculateInvestment(parsedForm));
   };
 
   return (
@@ -74,7 +99,13 @@ const InvestmentCalculator = () => {
                 <PortfolioGrowthChart
                   data={result.yearly}
                   currency={form.currency.split(' ')[0]}
-                  form={form}
+                  form={{
+                    stockReturn: Number(form.stockReturn) || 0,
+                    incomeGrowth: Number(form.incomeGrowth) || 0,
+                    investmentPercent: Number(form.investmentPercent) || 0,
+                    monthlyIncome: Number(form.monthlyIncome) || 0,
+                    period: Number(form.period) || 0,
+                  }}
                 />
 
                 {/* Investment Allocation Chart */}
@@ -90,7 +121,11 @@ const InvestmentCalculator = () => {
                 <SalaryGrowthChart
                   data={result.yearly}
                   currency={form.currency.split(' ')[0]}
-                  form={form}
+                  form={{
+                    incomeGrowth: Number(form.incomeGrowth) || 0,
+                    investmentPercent: Number(form.investmentPercent) || 0,
+                    monthlyIncome: Number(form.monthlyIncome) || 0,
+                  }}
                 />
               </div>
               
